@@ -31,6 +31,7 @@ func main()  {
 	}))
 
 	micro.Route("/notes", func(router fiber.Router) {
+		router.Get("/", controllers.FindNotes)
 		router.Post("/", controllers.CreateNoteHandler)
 	})
 
