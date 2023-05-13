@@ -35,6 +35,10 @@ func main()  {
 		router.Post("/", controllers.CreateNoteHandler)
 	})
 
+	micro.Route("/notes/:noteId", func(router fiber.Router) {
+		router.Patch("", controllers.UpdateNote)
+	})
+
 	micro.Get("/healthchecker", healthChecker)
 
 	log.Fatal(app.Listen(":8000"))
