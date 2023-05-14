@@ -106,3 +106,17 @@ func UpdateNote(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{ "status" : "success", "data" : fiber.Map{"note" : note} })
 }
+
+func DeleteNote(c *fiber.Ctx) error {
+	noteId := c.Params("noteId")
+	
+	result := initializers.DB.Delete(&models.Note{}, "id = ?", noteId)
+	
+	if result.RowsAffected == 0 {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{ "status": "Falha", "message" : "Não foi encontrado anotação com esse ID." })
+	} else if result.Error != nil {
+		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{ "status" : "Erro", "message" : result.Error })
+	}
+
+	return c.SendStatus(fiber.StatusNoContent)
+}
