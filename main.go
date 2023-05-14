@@ -38,6 +38,7 @@ func main()  {
 	micro.Route("/notes/:noteId", func(router fiber.Router) {
 		router.Get("", controllers.FindNoteById)
 		router.Patch("", controllers.UpdateNote)
+		router.Delete("", controllers.DeleteNote)
 	})
 
 	micro.Get("/healthchecker", healthChecker)
