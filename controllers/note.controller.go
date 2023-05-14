@@ -27,6 +27,23 @@ func FindNotes(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{ "status" : "success", "results" : len(notes), "notes" : notes })
 }
 
+func FindNoteById(c *fiber.Ctx) error {
+	noteId := c.Params("noteId")
+
+	var note models.Note
+
+	result := initializers.DB.First(&note, "id = ?", noteId)
+	
+	if err := result.Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{ "status" : "Falha", "message" : "Não existe anotação com esse ID" })
+		}
+		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{ "status": "Falha", "message" : err.Error() })
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{ "status" : "success", "data" : fiber.Map{"note" : note} })
+}
+
 func CreateNoteHandler(c *fiber.Ctx) error {
 	var payload *models.CreateNoteSchema
 
